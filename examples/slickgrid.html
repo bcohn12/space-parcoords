@@ -49,8 +49,9 @@ body, html {
 <div id="pager"></div>
 <script id="brushing">
 var parcoords = d3.parcoords()("#example")
-    .alpha(0.4)
-    .mode("queue") // progressive rendering
+    .alpha(0.10)
+    .mode("queue") // progressive rendering with queue
+    .rate(100)
     .height(d3.max([document.body.clientHeight-326, 220]))
     .margin({
       top: 36,
@@ -60,13 +61,13 @@ var parcoords = d3.parcoords()("#example")
     });
 
 // load csv file and create the chart
-d3.csv('data/nutrients.csv', function(data) {
+d3.csv('data/X_alphaProgression1426385301658.csv', function(data) {
   // slickgrid needs each data element to have an id
   data.forEach(function(d,i) { d.id = d.id || i; });
 
   parcoords
     .data(data)
-    .hideAxis(["name"])
+    .hideAxis(["id", "fx", "fy", "fz", "tx"]) //rm alpha
     .render()
     .reorderable()
     .brushMode("1D-axes");
