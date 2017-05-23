@@ -49,9 +49,8 @@ body, html {
 <div id="pager"></div>
 <script id="brushing">
 var parcoords = d3.parcoords()("#example")
-    .alpha(0.10)
-    .mode("queue") // progressive rendering with queue
-    .rate(100)
+    .alpha(0.4)
+    .mode("queue") // progressive rendering
     .height(d3.max([document.body.clientHeight-326, 220]))
     .margin({
       top: 36,
@@ -61,13 +60,13 @@ var parcoords = d3.parcoords()("#example")
     });
 
 // load csv file and create the chart
-d3.csv('data/X_alphaProgression1426385301658.csv', function(data) {
+d3.csv('data/distal_points_w_cost_80_FVC_rm_id.csv', function(data) {
   // slickgrid needs each data element to have an id
   data.forEach(function(d,i) { d.id = d.id || i; });
 
   parcoords
     .data(data)
-    .hideAxis(["id", "fx", "fy", "fz", "tx"]) //rm alpha
+    // .hideAxis(["name"])
     .render()
     .reorderable()
     .brushMode("1D-axes");
@@ -127,10 +126,20 @@ d3.csv('data/X_alphaProgression1426385301658.csv', function(data) {
 
   // highlight row in chart
   grid.onMouseEnter.subscribe(function(e,args) {
-    var i = grid.getCellFromEvent(e).row;
+    // Get row number from grid
+    var grid_row = grid.getCellFromEvent(e).row;
+
+    // Get the id of the item referenced in grid_row
+    var item_id = grid.getDataItem(grid_row).id;
     var d = parcoords.brushed() || data;
-    parcoords.highlight([d[i]]);
+
+    // Get the element position of the id in the data object
+    elementPos = d.map(function(x) {return x.id; }).indexOf(item_id);
+
+    // Highlight that element in the parallel coordinates graph
+    parcoords.highlight([d[elementPos]]);
   });
+
   grid.onMouseLeave.subscribe(function(e,args) {
     parcoords.unhighlight();
   });
