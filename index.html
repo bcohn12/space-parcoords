@@ -60,13 +60,14 @@ var parcoords = d3.parcoords()("#example")
     });
 
 // load csv file and create the chart
-d3.csv('data/distal_points_w_cost_80_FVC_rm_id.csv', function(data) {
+d3.csv('data/df_with_bounds.csv', function(data) {
   // slickgrid needs each data element to have an id
   data.forEach(function(d,i) { d.id = d.id || i; });
 
   parcoords
     .data(data)
     // .hideAxis(["name"])
+    .hideAxis(["id"])
     .render()
     .reorderable()
     .brushMode("1D-axes");
@@ -111,7 +112,7 @@ d3.csv('data/distal_points_w_cost_80_FVC_rm_id.csv', function(data) {
     var x = a[sortcol], y = b[sortcol];
     return (x == y ? 0 : (x > y ? 1 : -1));
   }
-  
+
   // click header to sort grid column
   grid.onSort.subscribe(function (e, args) {
     sortdir = args.sortAsc ? 1 : -1;
